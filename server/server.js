@@ -8,5 +8,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.listen(3000);
-module.exports.app = app;
+var server = app.listen(3000);
+module.exports = {
+  app,
+  server
+}
