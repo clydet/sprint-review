@@ -33,7 +33,6 @@ describe('#reviews', () => {
       })
       .expect(200)
       .expect((res) => {
-        console.log("Response:", res.body);
         expect(res.body).toMatchObject({
           owner: 'me',
           name: 'a sprint',
@@ -42,5 +41,39 @@ describe('#reviews', () => {
           completedTime: null
         });
       });
-  })
+  });
+
+  var failureScenario = (payload) => {
+    return () => {
+      return request(app)
+        .post('/reviews')
+        .send(payload)
+        .expect(400)
+        .expect((res) => {
+          expect(res.body._message).toBe('Review validation failed');
+        });
+    };
+  };
+
+  var scenarios = [{
+    name: 'should bomb when missing owner',
+    fn: failureScenario({name: 'a sprint'})
+  },{
+    name: 'should bomb when empty owner',
+    fn: failureScenario({owner: ''})
+  },{
+    name: 'should bomb when whitespace for owner',
+    fn: failureScenario({owner: '    '})
+  },{
+    name: 'should bomb when missing name',
+    fn: failureScenario({owner: 'me'})
+  },{
+    name: 'should bomb when empty name',
+    fn: failureScenario({name: ''})
+  },{
+    name: 'should bomb when whitespace for name',
+    fn: failureScenario({name: '    '})
+  }];
+
+  scenarios.forEach(scenario => it(scenario.name, scenario.fn));
 });
