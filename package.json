@@ -14,6 +14,8 @@
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.0",
     "express": "^4.16.0",
+    "lodash": "^4.17.5",
+    "mongod": "^2.0.0",
     "mongodb": "^3.0.3",
     "mongodb-memory-server": "^1.7.0",
     "mongoose": "^5.0.7",
