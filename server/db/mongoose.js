@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var url = global.__MONGO_URI__ || 'mongodb://localhost:27017/SprintReview';
+var url = process.env.MONGO_URI || global.__MONGO_URI__;
 
 mongoose.Promise = global.Promise;
 mongoose.connect(url);

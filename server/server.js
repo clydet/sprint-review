@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -9,7 +10,6 @@ var app = express();
 app.use(bodyParser.json());
 
 app.post('/reviews', (req, res) => {
-  console.log(req.body);
   var review = new Review({
     owner: req.body.owner,
     name: req.body.name,

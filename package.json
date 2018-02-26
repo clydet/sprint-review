@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage --verbose --config=./.jest/jest.config.js",
+    "start": "node server/server.js",
+    "test": "export ENV_VAR_PATH=./test/.env && jest --runInBand --config=./.jest/jest.config.js",
     "test-watch": "nodemon --exec \"npm test\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "dotenv": "^5.0.0",
     "express": "^4.16.0",
     "mongodb": "^3.0.3",
     "mongodb-memory-server": "^1.7.0",
