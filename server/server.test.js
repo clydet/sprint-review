@@ -1,5 +1,14 @@
 const request = require('supertest');
-const {app, server, mongoose} = require('./server');
+const mongoose = require('mongoose');
+const _ = require('lodash');
+
+const {app, server} = require('./server');
+const Review = require('./models/review');
+
+const dummyReview = {
+  owner: 'me',
+  name: 'a sprint'
+};
 
 afterAll(async () => {
   await mongoose.disconnect();
@@ -24,13 +33,11 @@ describe('#health', () => {
 });
 
 describe('#reviews', () => {
+
   it('should create new reviews', () => {
     return request(app)
       .post('/reviews')
-      .send({
-        owner: 'me',
-        name: 'a sprint'
-      })
+      .send(dummyReview)
       .expect(200)
       .expect((res) => {
         expect(res.body).toMatchObject({
@@ -41,6 +48,28 @@ describe('#reviews', () => {
           completedTime: null
         });
       });
+  });
+
+  describe('delete', () => {
+    let review;
+
+    beforeEach((done) => {
+      review = new Review(dummyReview);
+      review.save().then(() => done());
+    });
+
+    it('should remove reviews', () => {
+      return request(app)
+        .delete(`/reviews/${review._id.toString()}`)
+        .expect(204);
+    });
+
+    it('should fail remove when invalid id', () => {
+      let nonExistent = mongoose.Types.ObjectId().toString();
+      return request(app)
+        .delete(`/reviews/${nonExistent}`)
+        .expect(404);
+    });
   });
 
   var failureScenario = (payload) => {
@@ -76,4 +105,38 @@ describe('#reviews', () => {
   }];
 
   scenarios.forEach(scenario => it(scenario.name, scenario.fn));
+});
+
+describe('#participants', () => {
+  let review;
+
+  beforeEach((done) => {
+    review = new Review(dummyReview);
+    review.save().then(() => done());
+  });
+
+  it('should create new participants', () => {
+    return request(app)
+      .post('/participants')
+      .send({
+        reviewId: review._id.toString(),
+        name: 'Mitra'
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.participants[0]).toMatchObject({
+          name: 'Mitra'
+        });
+      });
+  });
+
+  it('should fail when review does not exist', () => {
+    return request(app)
+      .post('/participants')
+      .send({
+        reviewId: mongoose.Types.ObjectId().toString(),
+        name: 'nope'
+      })
+      .expect(404);
+  });
 });
