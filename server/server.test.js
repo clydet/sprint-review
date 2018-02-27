@@ -33,6 +33,12 @@ describe('#health', () => {
 });
 
 describe('#reviews', () => {
+  let review;
+
+  beforeEach((done) => {
+    review = new Review(dummyReview);
+    review.save().then(() => done());
+  });
 
   it('should create new reviews', () => {
     return request(app)
@@ -50,13 +56,44 @@ describe('#reviews', () => {
       });
   });
 
-  describe('delete', () => {
-    let review;
+  describe('update', () => {
+    let update = {
+      owner: 'meep',
+      name: 'mawp',
+      description: 'meep mawp'
+    };
 
-    beforeEach((done) => {
-      review = new Review(dummyReview);
-      review.save().then(() => done());
+    it('should update reviews valid attributes', () => {
+      return request(app)
+        .put(`/reviews/${review._id.toString()}`)
+        .send(update)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toMatchObject(update);
+        });
     });
+
+    it('should update reviews ignoring invalid attributes', () => {
+      return request(app)
+        .put(`/reviews/${review._id.toString()}`)
+        .send(_.extend({what: 123}, update))
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toMatchObject(update);
+          expect(res.body).not.toHaveProperty('what');
+        });
+    });
+
+    it('should fail review update if invalid id', () => {
+      return request(app)
+        .put(`/reviews/${mongoose.Types.ObjectId().toString()}`)
+        .send(update)
+        .expect(404);
+    });
+
+  });
+
+  describe('delete', () => {
 
     it('should remove reviews', () => {
       return request(app)

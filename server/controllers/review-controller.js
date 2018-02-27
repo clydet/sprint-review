@@ -1,4 +1,7 @@
 const Review = require('./../models/review');
+const _ = require('lodash');
+
+const omit = ['participants', 'completed', 'completedTime'];
 
 function create(req, res) {
   var review = new Review(req.body);
@@ -7,6 +10,20 @@ function create(req, res) {
       res.send(doc);
     }, (err) => {
       res.status(400).send(err);
+    });
+}
+
+function update(req, res) {
+  let id = req.params.id;
+  let keys = _.keys(_.omit(Review.schema.obj, omit));
+  let changeSet = _.pick(req.body, keys);
+
+  Review.findByIdAndUpdate(id, changeSet, {new: true})
+    .then((review) => {
+      if (review === null) {
+        return res.status(404).send();
+      }
+      res.status(200).send(review);
     });
 }
 
@@ -22,5 +39,6 @@ function remove(req, res) {
 
 module.exports = {
   create,
+  update,
   remove
 }

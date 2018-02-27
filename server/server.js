@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 
 app.post('/reviews', reviewController.create);
 app.delete('/reviews/:id', reviewController.remove);
+app.put('/reviews/:id', reviewController.update);
 
 app.post('/participants', participantController.create);
 
