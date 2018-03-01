@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 require('./db/mongoose');
 var reviewController = require('./controllers/review-controller');
 var participantController = require('./controllers/participant-controller');
-var Review = require('./models/review');
 var app = express();
 
 app.use(bodyParser.json());
