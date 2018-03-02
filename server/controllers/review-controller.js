@@ -1,7 +1,7 @@
 const Review = require('./../models/review');
 const _ = require('lodash');
 
-const omit = ['participants', 'completed', 'completedTime'];
+const omit = ['participants', 'issues', 'completed', 'completedTime'];
 
 function create(req, res) {
   var review = new Review(req.body);
