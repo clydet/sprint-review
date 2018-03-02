@@ -2,8 +2,8 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 
-const {app, server} = require('./server');
-const Review = require('./models/review');
+const {app, server} = require('../server');
+const Review = require('../models/review');
 
 const dummyReview = {
   owner: 'me',
@@ -90,7 +90,6 @@ describe('#reviews', () => {
         .send(update)
         .expect(404);
     });
-
   });
 
   describe('delete', () => {
@@ -142,38 +141,4 @@ describe('#reviews', () => {
   }];
 
   scenarios.forEach(scenario => it(scenario.name, scenario.fn));
-});
-
-describe('#participants', () => {
-  let review;
-
-  beforeEach((done) => {
-    review = new Review(dummyReview);
-    review.save().then(() => done());
-  });
-
-  it('should create new participants', () => {
-    return request(app)
-      .post('/participants')
-      .send({
-        reviewId: review._id.toString(),
-        name: 'Mitra'
-      })
-      .expect(200)
-      .expect((res) => {
-        expect(res.body.participants[0]).toMatchObject({
-          name: 'Mitra'
-        });
-      });
-  });
-
-  it('should fail when review does not exist', () => {
-    return request(app)
-      .post('/participants')
-      .send({
-        reviewId: mongoose.Types.ObjectId().toString(),
-        name: 'nope'
-      })
-      .expect(404);
-  });
 });

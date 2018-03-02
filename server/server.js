@@ -14,6 +14,9 @@ app.delete('/reviews/:id', reviewController.remove);
 app.put('/reviews/:id', reviewController.update);
 
 app.post('/participants', participantController.create);
+app.delete('/participants/:id', participantController.remove);
+app.put('/participants/:id', participantController.update);
+
 
 app.get('/health', (req, res) => {
   res.send({
