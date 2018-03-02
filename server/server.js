@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 require('./db/mongoose');
 var reviewController = require('./controllers/review-controller');
 var participantController = require('./controllers/participant-controller');
+var issueController = require('./controllers/issue-controller');
 var app = express();
 
 app.use(bodyParser.json());
@@ -17,6 +18,9 @@ app.post('/participants', participantController.create);
 app.delete('/participants/:id', participantController.remove);
 app.put('/participants/:id', participantController.update);
 
+app.post('/issues', issueController.create);
+app.delete('/issues/:id', issueController.remove);
+app.put('/issues/:id', issueController.update);
 
 app.get('/health', (req, res) => {
   res.send({
