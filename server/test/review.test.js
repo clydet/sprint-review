@@ -72,6 +72,7 @@ describe('#reviews', () => {
           expect(res.body).toMatchObject(update);
         });
     });
+<<<<<<< HEAD:server/test/review.test.js
 
     it('should update reviews ignoring invalid attributes', () => {
       return request(app)
@@ -91,6 +92,27 @@ describe('#reviews', () => {
         .expect(404);
     });
 
+=======
+
+    it('should update reviews ignoring invalid attributes', () => {
+      return request(app)
+        .put(`/reviews/${review._id.toString()}`)
+        .send(_.extend({what: 123}, update))
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toMatchObject(update);
+          expect(res.body).not.toHaveProperty('what');
+        });
+    });
+
+    it('should fail review update if invalid id', () => {
+      return request(app)
+        .put(`/reviews/${mongoose.Types.ObjectId().toString()}`)
+        .send(update)
+        .expect(404);
+    });
+
+>>>>>>> master:server/server.test.js
   });
 
   describe('delete', () => {

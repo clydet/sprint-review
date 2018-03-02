@@ -1,4 +1,5 @@
 const Review = require('./../models/review');
+const Participant = require('./../models/participant');
 const _ = require('lodash');
 
 function create(req, res) {
@@ -8,7 +9,8 @@ function create(req, res) {
     if (!review) {
       return res.status(404).send();
     }
-    review.participants.push(_.omit(req.body, ['reviewId']));
+    let participant = new Participant(_.omit(req.body, ['reviewId']));
+    review.participants.push(participant);
     review.save().then((saved) => {
       res.send(saved);
     });
