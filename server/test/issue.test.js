@@ -26,9 +26,8 @@ describe('#issues', () => {
 
   it('should create new issues', () => {
     return request(app)
-      .post('/issues')
+      .post(`/reviews/${review._id.toString()}/issues`)
       .send({
-        reviewId: review._id.toString(),
         content: 'This is the issue content'
       })
       .expect(200)

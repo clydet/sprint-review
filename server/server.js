@@ -19,14 +19,12 @@ app.post('/participants', participantController.create);
 app.delete('/participants/:id', participantController.remove);
 app.put('/participants/:id', participantController.update);
 
-app.post('/issues', issueController.create);
+app.post('/reviews/:reviewId/issues', issueController.create);
 app.delete('/issues/:id', issueController.remove);
 app.put('/issues/:id', issueController.update);
 
-app.post('/issues/:issueId/users/:userId', (req, res) => {
-  voteController.create(req, res);
-});
-//app.delete('/votes/:voteId', voteController.remove);
+app.post('/issues/:issueId/users/:userId', voteController.create);
+app.delete('/votes/:voteId', voteController.remove);
 
 app.get('/health', (req, res) => {
   res.send({

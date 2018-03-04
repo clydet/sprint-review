@@ -6,6 +6,7 @@ const {app, server} = require('../server');
 const Review = require('../models/review');
 const Issue = require('../models/issue');
 const Participant = require('../models/participant');
+const Vote = require('../models/vote');
 
 const dummyReview = {
   owner: 'me',
@@ -50,5 +51,31 @@ describe.only('#votes', () => {
     return request(app)
       .post(`/issues/${issue._id.toString()}/users/${mongoose.Types.ObjectId().toString()}`)
       .expect(404);
+  });
+
+  describe('deletion', () => {
+    let vote
+
+    beforeEach((done) => {
+      vote = new Vote({
+        participant: participant._id,
+        issue: issue._id
+      });
+      issue.votes.push(vote);
+      Promise.all([vote.save(), issue.save()])
+        .then(() => done());
+    });
+
+    it('should delete existing votes', () => {
+      return request(app)
+        .delete(`/votes/${vote._id.toString()}`)
+        .expect(204);
+    });
+
+    it('should fail deletion of nonexisting votes', () => {
+      return request(app)
+        .delete(`/votes/${mongoose.Types.ObjectId().toString()}`)
+        .expect(404);
+    });
   });
 });

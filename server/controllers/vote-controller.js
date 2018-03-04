@@ -30,6 +30,19 @@ function create(req, res) {
     });
 };
 
+function remove(req, res) {
+  let voteId = req.params.voteId;
+
+  Vote.findByIdAndRemove(voteId)
+    .then((vote) => {
+      if (!vote) {
+        return res.status(404).send();
+      }
+      res.status(204).send();
+    });
+};
+
 module.exports = {
-  create
+  create,
+  remove
 }
