@@ -6,6 +6,7 @@ require('./db/mongoose');
 var reviewController = require('./controllers/review-controller');
 var participantController = require('./controllers/participant-controller');
 var issueController = require('./controllers/issue-controller');
+var voteController = require('./controllers/vote-controller');
 var app = express();
 
 app.use(bodyParser.json());
@@ -21,6 +22,11 @@ app.put('/participants/:id', participantController.update);
 app.post('/issues', issueController.create);
 app.delete('/issues/:id', issueController.remove);
 app.put('/issues/:id', issueController.update);
+
+app.post('/issues/:issueId/users/:userId', (req, res) => {
+  voteController.create(req, res);
+});
+//app.delete('/votes/:voteId', voteController.remove);
 
 app.get('/health', (req, res) => {
   res.send({

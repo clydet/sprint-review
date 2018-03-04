@@ -41,9 +41,8 @@ describe('#issues', () => {
 
   it('should fail creation when review does not exist', () => {
     return request(app)
-      .post('/issues')
+      .post(`/reviews/${mongoose.Types.ObjectId().toString()}/issues`)
       .send({
-        reviewId: mongoose.Types.ObjectId().toString(),
         content: 'nope'
       })
       .expect(404);
