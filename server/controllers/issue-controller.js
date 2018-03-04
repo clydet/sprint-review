@@ -3,13 +3,13 @@ const Issue = require('./../models/issue');
 const _ = require('lodash');
 
 function create(req, res) {
-  let id = req.body.reviewId;
-
+  let id = req.params.reviewId;
+  
   Review.findById(id).then((review) => {
     if (!review) {
       return res.status(404).send();
     }
-    let issue = new Issue(_.omit(req.body, ['reviewId']));
+    let issue = new Issue(req.body);
     review.issues.push(issue);
     review.save().then((saved) => {
       res.send(saved);
